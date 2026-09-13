@@ -1,0 +1,708 @@
+*{box-sizing:border-box}
+:root{
+  --navy:#113b70;
+  --navy2:#0d2f5a;
+  --red:#c82127;
+  --red2:#ac171d;
+  --bg:#e9eef4;
+  --panel:#f7f8fb;
+  --line:#d8dee8;
+  --text:#26354b;
+  --muted:#718096;
+}
+html,body{margin:0;height:100%;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--text);background:var(--bg)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app-shell{display:grid;grid-template-columns:390px 1fr;height:100vh;overflow:hidden}
+.sidebar{background:#fff;border-right:1px solid #cfd7e3;display:grid;grid-template-rows:auto 1fr auto;height:100vh;box-shadow:4px 0 18px rgba(33,50,78,.05);z-index:2}
+.sidebar-top{padding:18px 20px;background:linear-gradient(135deg,#112e55,#0c2344);color:white;display:flex;align-items:center;gap:12px}
+.sidebar-top h1{font-size:17px;margin:0 0 3px}.sidebar-top p{font-size:12px;opacity:.75;margin:0}
+.brand-dot{width:38px;height:38px;background:#c82127;border-radius:9px;display:grid;place-items:center;font-weight:900;font-size:21px}
+.sidebar-scroll{overflow:auto;padding:14px 16px 24px;background:#f7f8fb}
+.side-section{background:white;border:1px solid #dfe5ee;border-radius:9px;margin-bottom:12px;padding:13px;box-shadow:0 2px 7px rgba(31,46,68,.035)}
+.side-title{font-size:11px;font-weight:900;color:#31445f;letter-spacing:.09em;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.side-title:before{content:"";width:4px;height:14px;border-radius:3px;background:#c82127}
+.side-title-row{justify-content:space-between}.side-title-row:before{margin-right:-2px}
+.field{display:flex;flex-direction:column;gap:5px;margin:8px 0}.field span{font-size:11px;color:#56667d;font-weight:700}
+input,textarea,select{width:100%;border:1px solid #cfd8e4;background:#fff;border-radius:6px;padding:8px 9px;color:#25344a;outline:none;font-size:12px}
+input:focus,textarea:focus,select:focus{border-color:#718fb6;box-shadow:0 0 0 2px rgba(53,93,145,.08)}
+textarea{resize:vertical;line-height:1.4}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.upload-box{border:1px dashed #b8c3d2;background:#fafcff;border-radius:8px;padding:13px;text-align:center;display:grid;gap:4px;justify-items:center}
+.upload-box b{font-size:12px;color:#31445f}.upload-box span{font-size:10px;color:#8a96a8}.upload-icon{font-size:22px;color:#c82127}
+.btn{border:0;border-radius:7px;padding:9px 11px;font-weight:800;font-size:12px}
+.btn-light{background:#eef3f9;color:#17375f;border:1px solid #d7e0ec;margin-top:6px}
+.btn-outline{background:#fff;color:#17375f;border:1px solid #cfd9e7}.full{width:100%}
+.load-status{font-size:10px;color:#7b8798;margin-top:8px}
+.student-list{display:grid;gap:8px}.student-card{border:1px solid #dbe2ec;border-radius:7px;padding:9px;background:#fbfcfe}
+.student-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}.student-card-head b{font-size:11px;color:#17375f}.remove-student{border:0;background:transparent;color:#9aa6b7;font-size:17px}
+.student-row{display:grid;grid-template-columns:1.25fr .8fr .5fr;gap:6px}.student-row .field{margin:0}
+.mini-btn{margin-left:auto;border:0;background:#eef3f9;color:#17375f;border-radius:6px;padding:5px 8px;font-size:10px;font-weight:800}
+.sidebar-actions{padding:12px 16px;background:#fff;border-top:1px solid #dfe5ee}
+.btn-generate{width:100%;background:linear-gradient(135deg,#c82127,#a5161c);color:#fff;padding:11px}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.btn-dark{background:#133962;color:#fff}
+.main{overflow:auto;background:#dfe6ee}
+.main-toolbar{height:70px;background:#fff;border-bottom:1px solid #cfd7e3;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;position:sticky;top:0;z-index:1}
+.toolbar-label{font-size:10px;font-weight:900;color:#c82127;letter-spacing:.12em}.toolbar-class{display:flex;align-items:baseline;gap:10px;margin-top:4px}.toolbar-class strong{font-size:16px;color:#17375f}.toolbar-class span{font-size:10px;color:#8a96a8}
+.student-switcher{display:flex;align-items:center;gap:7px}.student-switcher select{min-width:230px;background:#f9fbfd}.switch-btn{width:34px;height:34px;border:1px solid #cfd9e7;border-radius:7px;background:white;color:#17375f;font-size:21px}
+.preview-stage{padding:24px 28px 48px;min-height:calc(100vh - 70px)}
+.empty-state{height:calc(100vh - 130px);max-width:980px;margin:auto;display:grid;place-items:center;align-content:center;gap:8px;color:#8591a2}.empty-page{font-size:54px;color:#aab4c2}.empty-state b{color:#55657a}
+.hidden{display:none!important}
+.report-paper{width:980px;max-width:100%;margin:0 auto;background:#fff;padding:16px;border-radius:4px;box-shadow:0 12px 35px rgba(31,43,61,.18)}
+.report-head{display:grid;grid-template-columns:180px 1fr 210px;align-items:center;gap:12px;background:linear-gradient(110deg,#991f29 0%,#8b2434 52%,#173a67 100%);color:#fff;padding:15px 18px;border-radius:4px 4px 0 0}
+.kapla-word{font-size:28px;font-weight:1000;letter-spacing:.07em}.kapla-logo small{font-size:8px;font-weight:800}
+.report-heading{text-align:center}.report-heading h2{font-size:24px;margin:0;font-weight:900}.report-heading p{font-size:13px;font-weight:800;margin:3px 0 0}
+.report-meta{display:flex;flex-direction:column;align-items:flex-end;font-size:9px;line-height:1.55}
+.report-section{margin-top:10px;border:1px solid #cfd9e6;border-left:4px solid #163c6b;padding:11px 12px 12px;background:#fff}
+.report-section.red{border-left-color:#c82127}
+.section-ribbon{display:flex;align-items:center;gap:7px;margin-bottom:9px}.section-ribbon b{width:28px;height:28px;border-radius:50%;background:#c82127;color:#fff;display:grid;place-items:center;font-size:10px;box-shadow:0 0 0 3px #f8d7d9}.section-ribbon span{background:#163c6b;color:#fff;padding:5px 11px;font-size:10px;font-weight:900;letter-spacing:.03em}
+.red-ribbon span{background:#c82127}
+.student-info{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}.student-info>div{display:grid;grid-template-columns:105px 1fr;gap:5px;align-items:center;background:#f6f8fb;border:1px solid #e0e6ee;padding:6px 8px;font-size:10px}.student-info span{border-bottom:1px dotted #91a0b4;min-height:14px}
+.learning-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.learning-card{display:grid;grid-template-columns:120px 1fr;gap:7px;align-items:start;background:#f8fafc;border:1px solid #e1e7ee;padding:7px}.learning-card b{font-size:10px;color:#17375f}.learning-card textarea{border:0;background:transparent;padding:0;min-height:48px;font-size:10px;resize:none}
+.overall-box{display:grid;grid-template-columns:150px 1fr;border:1px solid #dbe3ec;background:#f8fafc}.overall-number{padding:8px 10px;border-right:1px solid #dbe3ec}.overall-number span{font-size:9px;color:#718096;display:block}.overall-number strong{font-size:20px;color:#c82127}.overall-copy{padding:8px 10px;font-size:10px;display:flex;align-items:center}
+.ability-grid{display:grid;grid-template-columns:.9fr 1.2fr;gap:10px;margin-top:8px}.skill-list{display:grid;gap:6px}.skill-item{border:1px solid #dde4ed;background:#f8fafc;padding:7px}.skill-top{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:800}.skill-top input{width:58px;padding:3px 4px;font-size:10px;text-align:right}.bar{height:6px;border-radius:10px;background:#e2e8f0;overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#163c6b,#3b78b8)}
+.chart-card{border:1px solid #dce4ed;background:#fbfcfe;padding:5px}.chart-title{text-align:center;font-size:9px;font-weight:900;letter-spacing:.12em;color:#65758b}.chart-card svg{display:block;width:100%;height:180px}.chart-legend{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}.chart-legend span{text-align:center;font-size:8px;border:1px solid #dce3ec;padding:4px}.chart-legend small{font-size:7px;color:#8591a1}
+.split-sections{display:grid;grid-template-columns:1fr 1fr;gap:10px}.compact{min-height:145px}.bullet-editor{display:grid;gap:5px}.bullet-row{display:grid;grid-template-columns:52px 1fr;gap:5px;align-items:center}.bullet-row .stars{font-size:11px;color:#c82127}.bullet-row input{font-size:9px;padding:5px 6px}.big-text{min-height:105px;font-size:10px;background:#f8fafc}
+.toast{position:fixed;right:18px;bottom:18px;background:#12355f;color:white;padding:10px 13px;border-radius:7px;opacity:0;transform:translateY(10px);transition:.2s;z-index:99;font-size:12px}.toast.show{opacity:1;transform:none}
+@media(max-width:1100px){.app-shell{grid-template-columns:350px 1fr}.report-paper{min-width:900px}.preview-stage{overflow:auto}}
+@media(max-width:800px){.app-shell{display:block;height:auto}.sidebar{height:auto}.sidebar-scroll{overflow:visible}.main{overflow:visible}.main-toolbar{position:static}.report-paper{min-width:880px}.preview-stage{overflow:auto}.sidebar-actions{position:sticky;bottom:0}}
+@media print{body{background:white}.sidebar,.main-toolbar,.toast{display:none!important}.app-shell{display:block}.main{overflow:visible;background:white}.preview-stage{padding:0}.report-paper{width:210mm;max-width:none;box-shadow:none;border-radius:0;padding:6mm;margin:0}.report-section,.split-sections{break-inside:avoid}}
+
+.file-label{display:inline-block;cursor:pointer}.upload-box.dragging{border-color:#c82127;background:#fff7f7}
+
+.teacher-other{margin-top:8px}
+.teacher-other span{display:block;font-size:11px;color:#56667d;font-weight:700;margin-bottom:5px}
+
+.kapla-logo{display:flex;align-items:center;justify-content:flex-start}
+.kapla-logo img{display:block;width:155px;max-width:100%;height:auto;object-fit:contain}
+.export-host{
+  position:absolute;
+  left:0;
+  top:0;
+  width:980px;
+  z-index:-9999;
+  pointer-events:none;
+  background:#fff;
+}
+.export-static-text{
+  white-space:pre-wrap;
+  word-break:break-word;
+  line-height:1.42;
+  color:#26354b;
+  font:inherit;
+}
+.export-static-input{
+  display:inline-block;
+  min-width:30px;
+  color:#26354b;
+  font:inherit;
+}
+
+/* v10: cleaner app chrome */
+.app-header,
+.site-header,
+.topbar,
+header.app-header{
+  background:transparent !important;
+  box-shadow:none !important;
+  border:0 !important;
+}
+
+/* Exported PDF text should visually match the live A4 preview */
+#reportPaperExport .export-static-text,
+#reportPaperExport .export-static-input{
+  font-family:inherit !important;
+  font-size:inherit !important;
+  font-weight:inherit !important;
+  line-height:inherit !important;
+  letter-spacing:inherit !important;
+  color:inherit !important;
+}
+#reportPaperExport .export-static-text{
+  white-space:pre-wrap;
+  word-break:normal;
+  overflow-wrap:anywhere;
+  min-height:0 !important;
+}
+
+/* v11: A4 preview uses normal DOM text, not textarea rendering.
+   This makes screen preview and exported PDF use the exact same typography. */
+.editable-text{
+  outline:none;
+  white-space:pre-wrap;
+  word-break:normal;
+  overflow-wrap:anywhere;
+  font:inherit;
+  color:inherit;
+  cursor:text;
+}
+.learning-card .editable-text{
+  border:0;
+  background:transparent;
+  padding:0;
+  min-height:48px;
+  font-size:10px;
+  line-height:1.4;
+}
+.big-text.editable-text{
+  min-height:105px;
+  font-size:10px;
+  line-height:1.45;
+  background:#f8fafc;
+  border:1px solid #cfd8e4;
+  border-radius:6px;
+  padding:8px 9px;
+}
+.editable-text:focus{
+  box-shadow:inset 0 0 0 1px #718fb6;
+}
+
+/* v12: section 04/05 use normal DOM text so PDF capture keeps all content */
+.bullet-row{
+  display:grid;
+  grid-template-columns:52px 1fr;
+  gap:5px;
+  align-items:center;
+}
+.bullet-text{
+  border:1px solid #cfd8e4;
+  border-radius:6px;
+  background:#fff;
+  padding:5px 6px;
+  font-size:9px;
+  line-height:1.35;
+  min-height:26px;
+  color:#26354b;
+  outline:none;
+  white-space:pre-wrap;
+  word-break:normal;
+  overflow-wrap:anywhere;
+}
+.bullet-text:focus{
+  border-color:#718fb6;
+  box-shadow:0 0 0 2px rgba(53,93,145,.08);
+}
+
+/* v13: skill percentages are normal DOM text so PDF export keeps the values */
+.skill-score{
+  min-width:58px;
+  text-align:right;
+  padding:3px 4px;
+  border:1px solid #cfd8e4;
+  border-radius:6px;
+  background:#fff;
+  color:#26354b;
+  font-size:10px;
+  font-weight:800;
+  line-height:1.2;
+  outline:none;
+}
+.skill-score:focus{
+  border-color:#718fb6;
+  box-shadow:0 0 0 2px rgba(53,93,145,.08);
+}
+
+/* v14: remove the large navy app branding background */
+.brand,
+.sidebar-brand,
+.app-brand,
+.left-brand,
+.app-header,
+.site-header,
+.topbar{
+  background:transparent !important;
+  box-shadow:none !important;
+  border:0 !important;
+}
+
+/* Existing markup uses .brand in this build */
+.brand{
+  padding-top:18px !important;
+  padding-bottom:12px !important;
+}
+.brand > div:first-child{
+  display:none !important;
+}
+.brand h1,
+.brand strong,
+.brand .title{
+  color:#12345f !important;
+}
+.brand p,
+.brand small,
+.brand .subtitle{
+  color:#718096 !important;
+}
+
+/* v15: remove the actual navy sidebar header background */
+.sidebar-top{
+  background:#ffffff !important;
+  color:#12345f !important;
+  border-bottom:1px solid #dfe5ee !important;
+  box-shadow:none !important;
+}
+.sidebar-top h1{
+  color:#12345f !important;
+}
+.sidebar-top p{
+  color:#718096 !important;
+  opacity:1 !important;
+}
+
+/* =========================================================
+   v29 — SECTION 03 CLEAN REFERENCE LAYOUT
+   Built from the provided reference screenshot.
+   ========================================================= */
+
+/* Overall rating: one compact horizontal row */
+#reportPaper .overall-box{
+  display:flex !important;
+  align-items:center !important;
+  gap:12px !important;
+  min-height:34px !important;
+  padding:6px 10px !important;
+  border:1px solid #dbe3ec !important;
+  border-radius:7px !important;
+  background:#fff !important;
+}
+#reportPaper .overall-number{
+  display:flex !important;
+  align-items:center !important;
+  gap:4px !important;
+  padding:0 !important;
+  border:0 !important;
+  white-space:nowrap !important;
+}
+#reportPaper .overall-number span,
+#reportPaper .overall-number strong{
+  display:inline !important;
+  margin:0 !important;
+  font-size:11px !important;
+  line-height:1.2 !important;
+  font-weight:850 !important;
+  color:#c51f27 !important;
+}
+#reportPaper .overall-copy{
+  padding:0 !important;
+  font-size:10px !important;
+  line-height:1.25 !important;
+  color:#27364d !important;
+}
+
+/* Main 03 split: same proportions as reference */
+#reportPaper .ability-grid{
+  display:grid !important;
+  grid-template-columns:minmax(0,43%) minmax(0,57%) !important;
+  gap:8px !important;
+  align-items:stretch !important;
+  margin-top:8px !important;
+  width:100% !important;
+}
+
+/* LEFT: 4 compact skill rows, full width */
+#reportPaper #skillList{
+  display:grid !important;
+  grid-template-rows:repeat(4,50px) !important;
+  gap:6px !important;
+  height:218px !important;
+  min-height:218px !important;
+  max-height:218px !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+#reportPaper #skillList .skill-item{
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  width:100% !important;
+  height:50px !important;
+  min-height:50px !important;
+  max-height:50px !important;
+  margin:0 !important;
+  padding:5px 8px !important;
+  box-sizing:border-box !important;
+  background:#f8fafc !important;
+  border:1px solid #d8e2ef !important;
+  border-radius:7px !important;
+}
+#reportPaper #skillList .skill-icon-box{
+  flex:0 0 34px !important;
+  width:34px !important;
+  height:34px !important;
+  display:grid !important;
+  place-items:center !important;
+  margin:0 !important;
+  background:#fff !important;
+  border:1px solid #d5dfec !important;
+  border-radius:7px !important;
+}
+#reportPaper #skillList .skill-icon-circle{
+  width:22px !important;
+  height:22px !important;
+  display:grid !important;
+  place-items:center !important;
+  border-radius:50% !important;
+  background:#e94a24 !important;
+}
+#reportPaper #skillList .skill-icon-circle svg{
+  width:13px !important;
+  height:13px !important;
+  fill:none !important;
+  stroke:#fff !important;
+  stroke-width:2 !important;
+  stroke-linecap:round !important;
+  stroke-linejoin:round !important;
+}
+#reportPaper #skillList .skill-content{
+  flex:1 1 auto !important;
+  min-width:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  gap:4px !important;
+}
+#reportPaper #skillList .skill-line{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  width:100% !important;
+  height:15px !important;
+}
+#reportPaper #skillList .skill-name,
+#reportPaper #skillList .skill-score{
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  font-size:10px !important;
+  line-height:15px !important;
+  font-weight:850 !important;
+}
+#reportPaper #skillList .skill-name{color:#26364f !important}
+#reportPaper #skillList .skill-score{color:#d02027 !important}
+#reportPaper #skillList .bar{
+  width:100% !important;
+  height:6px !important;
+  margin:0 !important;
+  padding:0 !important;
+  background:#dfe7f0 !important;
+  border-radius:99px !important;
+  overflow:hidden !important;
+}
+#reportPaper #skillList .bar > i{
+  display:block !important;
+  height:100% !important;
+  border-radius:99px !important;
+}
+#reportPaper #skillList .skill-item:nth-child(1) .bar > i,
+#reportPaper #skillList .skill-item:nth-child(3) .bar > i{
+  background:linear-gradient(90deg,#123d72,#347cc5) !important;
+}
+#reportPaper #skillList .skill-item:nth-child(2) .bar > i,
+#reportPaper #skillList .skill-item:nth-child(4) .bar > i{
+  background:linear-gradient(90deg,#c32229,#df3940) !important;
+}
+
+/* RIGHT: same total height as left; no dead zones */
+#reportPaper .chart-card{
+  height:218px !important;
+  min-height:218px !important;
+  max-height:218px !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:6px 8px !important;
+  box-sizing:border-box !important;
+  display:grid !important;
+  grid-template-rows:16px 156px 38px !important;
+  row-gap:4px !important;
+  overflow:hidden !important;
+  background:linear-gradient(180deg,#f1f6fd 0%,#fff8f6 100%) !important;
+  border:1px solid #c9d8ea !important;
+  border-radius:8px !important;
+}
+#reportPaper .chart-title{
+  margin:0 !important;
+  padding:0 !important;
+  text-align:center !important;
+  font-size:9px !important;
+  line-height:16px !important;
+  font-weight:900 !important;
+  letter-spacing:.12em !important;
+  color:#65758b !important;
+}
+
+/* Centered radar + right summary */
+#reportPaper .radar-main{
+  display:grid !important;
+  grid-template-columns:43% 57% !important;
+  gap:10px !important;
+  align-items:center !important;
+  width:100% !important;
+  min-width:0 !important;
+  height:156px !important;
+}
+#reportPaper .radar-main > svg{
+  width:100% !important;
+  height:136px !important;
+  min-height:136px !important;
+  max-height:136px !important;
+  margin:0 !important;
+  justify-self:center !important;
+  align-self:center !important;
+}
+#reportPaper .radar-skill-summary{
+  display:grid !important;
+  grid-template-rows:repeat(4,28px) !important;
+  gap:5px !important;
+  width:100% !important;
+  align-content:center !important;
+}
+#reportPaper .radar-summary-row{
+  display:grid !important;
+  grid-template-columns:24px minmax(0,1fr) auto !important;
+  gap:7px !important;
+  align-items:center !important;
+  height:28px !important;
+  padding:3px 7px !important;
+  box-sizing:border-box !important;
+  background:#fff !important;
+  border:1px solid #dce4ee !important;
+  border-radius:7px !important;
+  font-size:9px !important;
+}
+#reportPaper .radar-summary-icon{
+  width:21px !important;
+  height:21px !important;
+  display:grid !important;
+  place-items:center !important;
+  background:#fff !important;
+  border:1px solid #d8e2ee !important;
+  border-radius:6px !important;
+}
+#reportPaper .radar-summary-icon svg{
+  width:12px !important;
+  height:12px !important;
+  fill:none !important;
+  stroke:#e94a24 !important;
+  stroke-width:2 !important;
+  stroke-linecap:round !important;
+  stroke-linejoin:round !important;
+}
+#reportPaper .radar-summary-name{color:#26364f !important}
+#reportPaper .radar-summary-row b{
+  font-size:9px !important;
+  color:#cf1f28 !important;
+}
+
+/* Bottom rating scale spans the full chart card */
+#reportPaper .chart-legend{
+  display:grid !important;
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  gap:4px !important;
+  width:100% !important;
+  height:38px !important;
+  margin:0 !important;
+  padding:0 !important;
+  align-self:end !important;
+}
+#reportPaper .chart-legend > span{
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:4px 2px !important;
+  box-sizing:border-box !important;
+  text-align:center !important;
+  font-size:8px !important;
+  line-height:1.05 !important;
+  border:1px solid #dce3ec !important;
+  border-radius:6px !important;
+}
+#reportPaper .chart-legend small{
+  font-size:7px !important;
+}
+
+/* Hide obsolete icon layout hooks */
+#reportPaper .skill-icon-badge,
+#reportPaper .skill-top{
+  display:none !important;
+}
+
+/* Export mirrors preview */
+#reportPaperExport .ability-grid{
+  grid-template-columns:minmax(0,43%) minmax(0,57%) !important;
+  gap:8px !important;
+}
+#reportPaperExport #skillList,
+#reportPaperExport .chart-card{
+  height:218px !important;
+  min-height:218px !important;
+  max-height:218px !important;
+}
+
+/* =========================================================
+   v30 — CHART INNER SPACING
+   Add breathing room from right/bottom borders only.
+   ========================================================= */
+
+#reportPaper .chart-card{
+  padding:6px 14px 10px 8px !important;
+}
+
+/* Keep radar + summary away from the right edge */
+#reportPaper .radar-main{
+  padding-right:4px !important;
+  box-sizing:border-box !important;
+}
+
+/* Pull the 4 summary rows slightly inward */
+#reportPaper .radar-skill-summary{
+  padding-right:2px !important;
+  box-sizing:border-box !important;
+}
+
+/* Lift the bottom rating boxes away from the frame */
+#reportPaper .chart-legend{
+  margin-bottom:2px !important;
+}
+
+/* Export should match preview */
+#reportPaperExport .chart-card{
+  padding:6px 14px 10px 8px !important;
+}
+#reportPaperExport .radar-main{
+  padding-right:4px !important;
+  box-sizing:border-box !important;
+}
+#reportPaperExport .radar-skill-summary{
+  padding-right:2px !important;
+  box-sizing:border-box !important;
+}
+#reportPaperExport .chart-legend{
+  margin-bottom:2px !important;
+}
+
+/* v31 — lift the five rating boxes slightly higher */
+#reportPaper .chart-legend{
+  transform:translateY(-5px) !important;
+}
+#reportPaperExport .chart-legend{
+  transform:translateY(-5px) !important;
+}
+
+/* =========================================================
+   v32 — move all marked chart content slightly upward
+   Keep proportions/layout unchanged.
+   ========================================================= */
+
+/* Radar + 4 skill summary rows: lift together */
+#reportPaper .radar-main{
+  transform:translateY(-5px) !important;
+}
+
+/* Bottom 5 rating boxes: lift a little more than v31 */
+#reportPaper .chart-legend{
+  transform:translateY(-9px) !important;
+}
+
+/* Keep the right-side summary comfortably away from right edge */
+#reportPaper .radar-skill-summary{
+  padding-right:5px !important;
+  box-sizing:border-box !important;
+}
+
+/* Export mirrors preview */
+#reportPaperExport .radar-main{
+  transform:translateY(-5px) !important;
+}
+#reportPaperExport .chart-legend{
+  transform:translateY(-9px) !important;
+}
+#reportPaperExport .radar-skill-summary{
+  padding-right:5px !important;
+  box-sizing:border-box !important;
+}
+
+/* =========================================================
+   v33 — vertically center text inside the 5 rating boxes
+   ========================================================= */
+#reportPaper .chart-legend > *{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  box-sizing:border-box !important;
+}
+
+#reportPaperExport .chart-legend > *{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  box-sizing:border-box !important;
+}
+
+/* =========================================================
+   v34 — TRUE vertical centering for rating legend text
+   The <br> line box was making the content look top-heavy.
+   ========================================================= */
+#reportPaper .chart-legend > span,
+#reportPaperExport .chart-legend > span{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  height:100% !important;
+  min-height:0 !important;
+  padding:0 2px !important;
+  line-height:1 !important;
+  text-align:center !important;
+  box-sizing:border-box !important;
+}
+
+#reportPaper .chart-legend > span br,
+#reportPaperExport .chart-legend > span br{
+  display:none !important;
+}
+
+#reportPaper .chart-legend > span small,
+#reportPaperExport .chart-legend > span small{
+  display:block !important;
+  margin-top:2px !important;
+  line-height:1 !important;
+}
+
+/* =========================================================
+   v35 — ALIGN LEFT HEADER + PREVIEW HEADER BOTTOM BORDER
+   ========================================================= */
+
+/* Both top blocks use the exact same box height */
+.sidebar-top,
+.main-toolbar{
+  height:70px !important;
+  min-height:70px !important;
+  max-height:70px !important;
+  box-sizing:border-box !important;
+  border-bottom:1px solid #cfd7e3 !important;
+}
+
+/* Left title block was auto-height and slightly taller */
+.sidebar-top{
+  padding:10px 20px !important;
+  align-items:center !important;
+}
+
+/* Keep right header inside the same 70px box */
+.main-toolbar{
+  padding:10px 24px !important;
+  align-items:center !important;
+}
+
+/* Ensure sidebar grid honors the fixed first row */
+.sidebar{
+  grid-template-rows:70px minmax(0,1fr) auto !important;
+}
